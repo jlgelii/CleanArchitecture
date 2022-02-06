@@ -19,9 +19,8 @@ namespace CleanArchitecture.Infrastructure.Database
             _databaseName = connections.GetConnectionString();
         }
 
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        public SampleDbContext(DbContextOptions options) : base(options)
         {
-            optionsBuilder.UseSqlServer(_databaseName);
         }
 
 
