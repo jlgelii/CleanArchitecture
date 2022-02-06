@@ -16,6 +16,8 @@ using System.Threading.Tasks;
 using MediatR;
 using CleanArchitecture.Application;
 using CleanArchitecture.Application.Configurations.Validation;
+using CleanArchitecture.Infrastructure.Configurations;
+using CleanArchitecture.Application.Configurations.Services;
 
 namespace CleanArchitecture.API
 {
@@ -41,6 +43,7 @@ namespace CleanArchitecture.API
             services.AddMediatR(typeof(EntryPoint).Assembly);
             services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehaviour<,>));
 
+            services.AddSingleton<IConnectionsConfigurations, ConnectionsConfigurations>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
