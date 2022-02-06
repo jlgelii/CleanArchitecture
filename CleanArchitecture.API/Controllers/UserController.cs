@@ -1,10 +1,13 @@
 ﻿using CleanArchitecture.Application.UserAccounts.Command.CreateUser;
+using CleanArchitecture.Application.UserAccounts.Command.DeleteUser;
 using CleanArchitecture.Application.UserAccounts.Command.UpdateUser;
+using CleanArchitecture.Application.UserAccounts.Queries.GetUsers;
 using CleanArchitecture.Domain.Entities;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace CleanArchitecture.API.Controllers
@@ -21,6 +24,21 @@ namespace CleanArchitecture.API.Controllers
             this._mediator = mediator;
         }
 
+
+        /// <summary>
+        /// Get users
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet]
+        [Route("")]
+        public async Task<ActionResult<List<UserAccount>>> Get()
+        {
+            var response = await _mediator.Send(new GetUsersQuery());
+            if (response.Error)
+                return BadRequest(response.ModelStateError);
+
+            return Ok(response.Data);
+        }
 
         /// <summary>
         /// Create user
@@ -56,6 +74,22 @@ namespace CleanArchitecture.API.Controllers
 
             return Ok(response.Data);
 
+        }
+
+        /// <summary>
+        /// Delete user
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [HttpDelete]
+        [Route("{id:int}")]
+        public async Task<ActionResult> DeleteUserAccount(int id)
+        {
+            var response = await _mediator.Send(new DeleteUserCommand(id));
+            if (response.Error)
+                return BadRequest(response.ModelStateError);
+
+            return Ok(response.Data);
         }
     }
 }

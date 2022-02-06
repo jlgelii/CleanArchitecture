@@ -1,4 +1,5 @@
 ﻿using CleanArchitecture.Application.UserAccounts.Command.UpdateUser;
+using CleanArchitecture.Domain.Entities;
 using FluentAssertions;
 using System;
 using System.Collections.Generic;
@@ -27,6 +28,16 @@ namespace CleanArchitecture.Test.Application.UserAccounts.Command
         {
             // Arrange
             var command = new UpdateUserCommand(1, "User1000", "Password123");
+            var expected = new UserAccount()
+            {
+                Username = command.Username,
+                Password = command.Password,
+                Id = command.Id,
+                UpdatedBy = _jwtServices.GetLoggedUser().UserId,
+                UpdatedDate = _dateTimeService.Now,
+                CreatedBy = _jwtServices.GetLoggedUser().UserId,
+                CreatedDate = _dateTimeService.Now,
+            };
 
             // Act
             var response = await _sutHandler.Handle(command, CancellationToken.None);
@@ -39,14 +50,45 @@ namespace CleanArchitecture.Test.Application.UserAccounts.Command
             response.Error
                 .Should().BeFalse();
 
-            user.Id
-                .Should().Be(command.Id);
+            user.Should().BeEquivalentTo(expected);
+        }
 
-            user.Username
-                .Should().Be(command.Username);
+        [Fact]
+        public async void UpdateUser_ShouldValidate_WhenUserDoesNotExist()
+        {
+            // Arrange
+            var command = new UpdateUserCommand(7, "User1000", "Password123");
 
-            user.Password
-                .Should().Be(command.Password);
+            // Act
+            var response = await _sutHandler.Handle(command, CancellationToken.None);
+
+            // Assert
+            response.Error
+                .Should().BeTrue();
+
+            _context.UserAccount
+                    .FirstOrDefault(u => u.Username == command.Username
+                                      && u.Password == command.Password)
+                    .Should().BeNull();
+        }
+
+        [Fact]
+        public async void UpdateUser_ShouldValidate_WhenUsernameUsed()
+        {
+            // Arrange
+            var command = new UpdateUserCommand(1, "User2", "Password123");
+
+            // Act
+            var response = await _sutHandler.Handle(command, CancellationToken.None);
+
+            // Assert
+            response.Error
+                .Should().BeTrue();
+
+            _context.UserAccount
+                    .Where(u => u.Username == command.Username
+                             && u.Id != command.Id)
+                    .Should().HaveCount(1);
         }
 
         [Fact]
