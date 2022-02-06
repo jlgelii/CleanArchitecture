@@ -7,6 +7,7 @@ using CleanArchitecture.Test.Configurations.Database;
 using CleanArchitecture.Test.Configurations.Services;
 using FluentAssertions;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,7 +18,7 @@ using Xunit;
 
 namespace CleanArchitecture.Test.Application.UserAccounts.Command
 {
-    public class CreateUserCommandTests
+    public class CreateUserCommandTests : IDisposable
     {
         private readonly CreateUserCommandHandler _sut;
         private readonly SampleDbContext _context;
@@ -25,12 +26,16 @@ namespace CleanArchitecture.Test.Application.UserAccounts.Command
 
         public CreateUserCommandTests()
         {
-            _jwtServices = new JwtServiceTest();
             _context = new SampleDbContext(new DbContextOptionsBuilder<SampleDbContext>()
-                                                .UseInMemoryDatabase(databaseName: "SampleDb")
-                                                .Options);
+                                                   .UseInMemoryDatabase(databaseName: "SampleDb")
+                                                   .UseInternalServiceProvider(new ServiceCollection().AddEntityFrameworkInMemoryDatabase()
+                                                                                                      .BuildServiceProvider())
+                                                   .Options);
 
+            _jwtServices = new JwtServiceTest();
             _sut = new CreateUserCommandHandler(_context, _jwtServices);
+
+            SeedTestData.Seed(_context);
         }
 
         [Fact]
@@ -54,7 +59,6 @@ namespace CleanArchitecture.Test.Application.UserAccounts.Command
         {
             // Arrange
             var command = new CreateUserCommand("User1", "password");
-            SeedData.SeedUserAccount(_context);
 
             // Act
             var response = await _sut.Handle(command, CancellationToken.None);
@@ -108,6 +112,11 @@ namespace CleanArchitecture.Test.Application.UserAccounts.Command
             // Assert
             response.IsSuccessful
                     .Should().BeFalse();
+        }
+
+        public void Dispose()
+        {
+            _context.Dispose();
         }
     }
 }
