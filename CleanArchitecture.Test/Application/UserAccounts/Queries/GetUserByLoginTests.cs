@@ -17,7 +17,7 @@ using Xunit;
 
 namespace CleanArchitecture.Test.Application.UserAccounts.Queries
 {
-    public class GetUserByLoginTests : BaseTest, IDisposable
+    public class GetUserByLoginTests : BaseTest
     {
         private readonly GetUserByLoginQueryHandler _sut;
 
@@ -82,11 +82,6 @@ namespace CleanArchitecture.Test.Application.UserAccounts.Queries
             // Assert
             response.IsSuccessful
                 .Should().BeFalse();
-        }
-
-        public void Dispose()
-        {
-            _context.Dispose();
         }
     }
 }

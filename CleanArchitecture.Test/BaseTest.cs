@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 namespace CleanArchitecture.Test
 {
 
-    public class BaseTest
+    public class BaseTest : IDisposable
     {
         public readonly SampleDbContext _context;
         public readonly IJwtServices _jwtServices;
@@ -33,6 +33,11 @@ namespace CleanArchitecture.Test
 
             _context = new SampleDbContext(option, _dateTimeService, _jwtServices);
             SeedTestData.Seed(_context);
+        }
+
+        public void Dispose()
+        {
+            _context.Dispose();
         }
     }
 }

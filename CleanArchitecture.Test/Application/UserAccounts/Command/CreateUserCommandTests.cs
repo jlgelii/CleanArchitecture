@@ -18,7 +18,7 @@ using Xunit;
 
 namespace CleanArchitecture.Test.Application.UserAccounts.Command
 {
-    public class CreateUserCommandTests : BaseTest, IDisposable
+    public class CreateUserCommandTests : BaseTest
     {
         private readonly CreateUserCommandHandler _sut;
 
@@ -101,11 +101,6 @@ namespace CleanArchitecture.Test.Application.UserAccounts.Command
             // Assert
             response.IsSuccessful
                     .Should().BeFalse();
-        }
-
-        public void Dispose()
-        {
-            _context.Dispose();
         }
     }
 }
