@@ -45,10 +45,8 @@ namespace CleanArchitecture.Test.Application.UserAccounts.Command
             var response = await _sut.Handle(command, CancellationToken.None);
 
             // Assert
-            _context.UserAccount
-                    .FirstOrDefault(u => u.Username == command.Username
-                                      && u.Password == command.Password)
-                    .Should().BeEquivalentTo(expected);
+            response.Data
+                .Should().BeEquivalentTo(expected);
         }
 
         [Fact]
