@@ -52,6 +52,7 @@ namespace CleanArchitecture.Test.Application.UserAccounts.Command
         [Fact]
         public async void UpdateUser_ShouldValidate_WhenUserDoesNotExist()
         {
+            // Arrange
             var command = new UpdateUserCommand(7, "User1000", "Password123");
 
             // Act
@@ -65,6 +66,24 @@ namespace CleanArchitecture.Test.Application.UserAccounts.Command
                     .FirstOrDefault(u => u.Username == command.Username
                                       && u.Password == command.Password)
                     .Should().BeNull();
+        }
+
+        [Fact]
+        public async void UpdateUser_ShouldValidate_WhenUsernameUsed()
+        {
+            // Arrange
+            var command = new UpdateUserCommand(1, "User2", "Password123");
+
+            // Act
+            var response = await _sutHandler.Handle(command, CancellationToken.None);
+
+            // Assert
+            response.Error
+                .Should().BeTrue();
+
+            _context.UserAccount
+                    .Where(u => u.Username == command.Username)
+                    .Should().HaveCount(1);
         }
 
         [Fact]
