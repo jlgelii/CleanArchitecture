@@ -1,4 +1,5 @@
 ﻿using CleanArchitecture.Application.UserAccounts.Command.CreateUser;
+using CleanArchitecture.Application.UserAccounts.Command.UpdateUser;
 using CleanArchitecture.Domain.Entities;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
@@ -32,9 +33,29 @@ namespace CleanArchitecture.API.Controllers
         {
             var response = await _mediator.Send(command);
             if (response.Error)
-                return BadRequest(response.Error);
+                return BadRequest(response.ModelStateError);
 
             return Ok(response.Data);
+        }
+
+        /// <summary>
+        /// Update user
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="command"></param>
+        /// <returns></returns>
+        [HttpPut]
+        [Route("{id:int}")]
+        public async Task<ActionResult<UserAccount>> UpdateUserAccount(int id, UpdateUserCommand command)
+        {
+            command.Id = id;
+
+            var response = await _mediator.Send(command);
+            if (response.Error)
+                return BadRequest(response.ModelStateError);
+
+            return Ok(response.Data);
+
         }
     }
 }

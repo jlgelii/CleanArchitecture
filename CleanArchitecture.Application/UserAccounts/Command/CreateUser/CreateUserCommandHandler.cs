@@ -35,9 +35,6 @@ namespace CleanArchitecture.Application.UserAccounts.Command.CreateUser
             {
                 Username = request.Username,
                 Password = request.Password,
-                CreatedDate = DateTime.UtcNow,
-                CreatedBy = _jwtServices.GetLoggedUser()
-                                        .UserId,
             };
 
             _context.UserAccount.Add(user);
