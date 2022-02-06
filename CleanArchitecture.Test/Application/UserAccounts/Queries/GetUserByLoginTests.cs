@@ -21,17 +21,22 @@ namespace CleanArchitecture.Test.Application.UserAccounts.Queries
     {
         private readonly SampleDbContext _context;
         private readonly IJwtServices _jwtServices;
+        private readonly IDateTimeService _datetimService;
         private readonly GetUserByLoginQueryHandler _sut;
 
         public GetUserByLoginTests()
         {
-            _context = new SampleDbContext(new DbContextOptionsBuilder<SampleDbContext>()
+            _jwtServices = new JwtServiceTest();
+            _datetimService = new DateTimeServiceTest();
+
+            var option = new DbContextOptionsBuilder<SampleDbContext>()
                                                    .UseInMemoryDatabase(databaseName: "SampleDb")
                                                    .UseInternalServiceProvider(new ServiceCollection().AddEntityFrameworkInMemoryDatabase()
                                                                                                       .BuildServiceProvider())
-                                                   .Options);
+                                                   .Options;
 
-            _jwtServices = new JwtServiceTest();
+            _context = new SampleDbContext(option, _datetimService, _jwtServices);
+
             _sut = new GetUserByLoginQueryHandler(_context, _jwtServices);
 
             SeedTestData.Seed(_context);

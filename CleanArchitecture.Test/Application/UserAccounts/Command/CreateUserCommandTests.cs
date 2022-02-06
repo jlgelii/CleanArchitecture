@@ -23,16 +23,20 @@ namespace CleanArchitecture.Test.Application.UserAccounts.Command
         private readonly CreateUserCommandHandler _sut;
         private readonly SampleDbContext _context;
         private readonly IJwtServices _jwtServices;
+        private readonly IDateTimeService _dateTimeService;
 
         public CreateUserCommandTests()
         {
-            _context = new SampleDbContext(new DbContextOptionsBuilder<SampleDbContext>()
+            _jwtServices = new JwtServiceTest();
+            _dateTimeService = new DateTimeServiceTest();
+
+            var option = new DbContextOptionsBuilder<SampleDbContext>()
                                                    .UseInMemoryDatabase(databaseName: "SampleDb")
                                                    .UseInternalServiceProvider(new ServiceCollection().AddEntityFrameworkInMemoryDatabase()
                                                                                                       .BuildServiceProvider())
-                                                   .Options);
+                                                   .Options;
 
-            _jwtServices = new JwtServiceTest();
+            _context = new SampleDbContext(option, _dateTimeService, _jwtServices);
             _sut = new CreateUserCommandHandler(_context, _jwtServices);
 
             SeedTestData.Seed(_context);

@@ -48,6 +48,7 @@ namespace CleanArchitecture.API
 
             services.AddSingleton<IConnectionsConfigurations, ConnectionsConfigurations>();
             services.AddSingleton<IJwtServices, JwtService>();
+            services.AddSingleton<IDateTimeService, DateTimeService>();
             services.AddSingleton<ISampleDbContext, SampleDbContext>();
         }
 
