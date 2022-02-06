@@ -31,7 +31,8 @@ namespace CleanArchitecture.Application.UserAccounts.Command.DeleteUser
         public async Task<Response<UserAccount>> Handle(DeleteUserCommand request, CancellationToken cancellationToken)
         {
             var user = await _context.UserAccount
-                                     .SingleOrDefaultAsync(u => u.Id == request.Id);
+                                     .SingleOrDefaultAsync(u => u.Id == request.Id
+                                                             && (u.Deleted == false || u.Deleted == null));
 
             if (user == null)
                 return await Task.FromResult(Response.Fail(user, "User does not exist."));

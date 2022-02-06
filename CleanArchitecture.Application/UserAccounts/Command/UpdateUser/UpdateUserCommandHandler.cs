@@ -26,7 +26,8 @@ namespace CleanArchitecture.Application.UserAccounts.Command.UpdateUser
         public async Task<Response<UserAccount>> Handle(UpdateUserCommand request, CancellationToken cancellationToken)
         {
             var user = _context.UserAccount
-                               .FirstOrDefault(u => u.Id == request.Id);
+                               .FirstOrDefault(u => u.Id == request.Id
+                                                 && (u.Deleted == false || u.Deleted == null));
 
             if (user == null)
                 return await Task.FromResult(Response.Fail(user, "User does not exist"));

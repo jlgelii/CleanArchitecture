@@ -26,7 +26,8 @@ namespace CleanArchitecture.Application.UserAccounts.Command.CreateUser
         public async Task<Response<UserAccount>> Handle(CreateUserCommand request, CancellationToken cancellationToken)
         {
             var user = _context.UserAccount
-                                  .FirstOrDefault(u => u.Username == request.Username);
+                                  .FirstOrDefault(u => u.Username == request.Username
+                                                    && (u.Deleted == false || u.Deleted == null));
 
             if (user != null)
                 return await Task.FromResult(Response.Fail(user, "Username already exist."));

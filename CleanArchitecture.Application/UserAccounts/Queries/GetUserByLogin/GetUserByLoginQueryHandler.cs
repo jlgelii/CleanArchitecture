@@ -4,6 +4,7 @@ using CleanArchitecture.Domain.Common;
 using CleanArchitecture.Domain.Entities;
 using CleanArchitecture.Domain.Tokens;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -26,15 +27,17 @@ namespace CleanArchitecture.Application.UserAccounts.Queries.GetUserByLogin
 
         public async Task<Response<GetUserByLoginDto>> Handle(GetUserByLoginQuery request, CancellationToken cancellationToken)
         {
-            var user = _context.UserAccount
-                               .Select(u => new GetUserByLoginDto
-                               {
-                                   Id = u.Id,
-                                   Username = u.Username,
-                                   Password = u.Password,
-                               })
-                               .FirstOrDefault(u => u.Username == request.Username
-                                                 && u.Password == request.Password);
+            var user = await _context.UserAccount
+                                     .Where(u => u.Username == request.Username
+                                              && u.Password == request.Password
+                                              && (u.Deleted == false || u.Deleted == null))
+                                     .Select(u => new GetUserByLoginDto
+                                     {
+                                         Id = u.Id,
+                                         Username = u.Username,
+                                         Password = u.Password,
+                                     })
+                                     .FirstOrDefaultAsync();
 
             if (user == null)
                 return await Task.FromResult(Response.Fail(user, "User does not exist."));
