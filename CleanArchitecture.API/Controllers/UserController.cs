@@ -1,4 +1,5 @@
 ﻿using CleanArchitecture.Application.UserAccounts.Command.CreateUser;
+using CleanArchitecture.Application.UserAccounts.Command.DeleteUser;
 using CleanArchitecture.Application.UserAccounts.Command.UpdateUser;
 using CleanArchitecture.Domain.Entities;
 using MediatR;
@@ -56,6 +57,22 @@ namespace CleanArchitecture.API.Controllers
 
             return Ok(response.Data);
 
+        }
+
+        /// <summary>
+        /// Delete user
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [HttpDelete]
+        [Route("{id:int}")]
+        public async Task<ActionResult> DeleteUserAccount(int id)
+        {
+            var response = await _mediator.Send(new DeleteUserCommand(id));
+            if (response.Error)
+                return BadRequest(response.ModelStateError);
+
+            return Ok(response.Data);
         }
     }
 }
