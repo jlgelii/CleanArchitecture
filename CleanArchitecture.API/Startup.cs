@@ -18,6 +18,7 @@ using CleanArchitecture.Application;
 using CleanArchitecture.Application.Configurations.Validation;
 using CleanArchitecture.Infrastructure.Configurations;
 using CleanArchitecture.Application.Configurations.Services;
+using CleanArchitecture.Infrastructure.Services;
 
 namespace CleanArchitecture.API
 {
@@ -44,6 +45,7 @@ namespace CleanArchitecture.API
             services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehaviour<,>));
 
             services.AddSingleton<IConnectionsConfigurations, ConnectionsConfigurations>();
+            services.AddSingleton<IJwtServices, JwtService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
