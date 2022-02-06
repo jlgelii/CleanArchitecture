@@ -1,4 +1,6 @@
-﻿using CleanArchitecture.Application.Configurations.Services;
+﻿using CleanArchitecture.Application.Configurations.Database;
+using CleanArchitecture.Application.Configurations.Services;
+using CleanArchitecture.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -21,6 +23,10 @@ namespace CleanArchitecture.Infrastructure.Database
         {
             optionsBuilder.UseSqlServer(_databaseName);
         }
+
+
+
+        public DbSet<UserAccount> UserAccount { get; set; }
 
 
         void ISampleDbContext.SaveChanges()

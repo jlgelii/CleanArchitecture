@@ -20,6 +20,7 @@ using CleanArchitecture.Infrastructure.Configurations;
 using CleanArchitecture.Application.Configurations.Services;
 using CleanArchitecture.Infrastructure.Services;
 using CleanArchitecture.Infrastructure.Database;
+using CleanArchitecture.Application.Configurations.Database;
 
 namespace CleanArchitecture.API
 {
