@@ -9,6 +9,6 @@ namespace CleanArchitecture.Test.Configurations.Services
 {
     public class DateTimeServiceTest : IDateTimeService
     {
-        public DateTime Now { get; set; }
+        public DateTime Now => new DateTime(2022, 1, 31);
     }
 }

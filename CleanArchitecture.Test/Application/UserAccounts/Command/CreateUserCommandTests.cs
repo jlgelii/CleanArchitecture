@@ -32,6 +32,14 @@ namespace CleanArchitecture.Test.Application.UserAccounts.Command
         {
             // Arrange
             var command = new CreateUserCommand("user6", "password");
+            var expected = new UserAccount()
+            {
+                CreatedBy = _jwtServices.GetLoggedUser().UserId,
+                CreatedDate = _dateTimeService.Now,
+                Id = 6,
+                Password = command.Password,
+                Username = command.Username,
+            };
 
             // Act
             var response = await _sut.Handle(command, CancellationToken.None);
@@ -40,7 +48,7 @@ namespace CleanArchitecture.Test.Application.UserAccounts.Command
             _context.UserAccount
                     .FirstOrDefault(u => u.Username == command.Username
                                       && u.Password == command.Password)
-                    .Should().NotBeNull();
+                    .Should().BeEquivalentTo(expected);
         }
 
         [Fact]

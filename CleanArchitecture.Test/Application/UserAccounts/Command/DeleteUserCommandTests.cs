@@ -1,4 +1,5 @@
 ﻿using CleanArchitecture.Application.UserAccounts.Command.DeleteUser;
+using CleanArchitecture.Domain.Entities;
 using FluentAssertions;
 using System;
 using System.Collections.Generic;
@@ -27,6 +28,19 @@ namespace CleanArchitecture.Test.Application.UserAccounts.Command
         {
             // Arrange
             var command = new DeleteUserCommand(1);
+            var expected = new UserAccount()
+            {
+                CreatedBy = _jwtServices.GetLoggedUser().UserId,
+                CreatedDate = _dateTimeService.Now,
+                Id = command.Id,
+                Deleted = true,
+                DeletedBy = _jwtServices.GetLoggedUser().UserId,
+                DeletedDate = _dateTimeService.Now,
+                Password = "Password1",
+                Username = "User1",
+                UpdatedBy = _jwtServices.GetLoggedUser().UserId,
+                UpdatedDate = _dateTimeService.Now,
+            };
 
             // Act
             var response = await _sutHandler.Handle(command, CancellationToken.None);
@@ -37,8 +51,7 @@ namespace CleanArchitecture.Test.Application.UserAccounts.Command
 
             _context.UserAccount
                 .FirstOrDefault(u => u.Id == command.Id)
-                .Deleted
-                .Should().BeTrue();
+                .Should().BeEquivalentTo(expected);
         }
 
         [Fact]

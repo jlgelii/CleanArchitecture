@@ -1,4 +1,5 @@
 ﻿using CleanArchitecture.Application.UserAccounts.Command.UpdateUser;
+using CleanArchitecture.Domain.Entities;
 using FluentAssertions;
 using System;
 using System.Collections.Generic;
@@ -27,6 +28,16 @@ namespace CleanArchitecture.Test.Application.UserAccounts.Command
         {
             // Arrange
             var command = new UpdateUserCommand(1, "User1000", "Password123");
+            var expected = new UserAccount()
+            {
+                Username = command.Username,
+                Password = command.Password,
+                Id = command.Id,
+                UpdatedBy = _jwtServices.GetLoggedUser().UserId,
+                UpdatedDate = _dateTimeService.Now,
+                CreatedBy = _jwtServices.GetLoggedUser().UserId,
+                CreatedDate = _dateTimeService.Now,
+            };
 
             // Act
             var response = await _sutHandler.Handle(command, CancellationToken.None);
@@ -39,14 +50,7 @@ namespace CleanArchitecture.Test.Application.UserAccounts.Command
             response.Error
                 .Should().BeFalse();
 
-            user.Id
-                .Should().Be(command.Id);
-
-            user.Username
-                .Should().Be(command.Username);
-
-            user.Password
-                .Should().Be(command.Password);
+            user.Should().BeEquivalentTo(expected);
         }
 
         [Fact]
@@ -82,7 +86,8 @@ namespace CleanArchitecture.Test.Application.UserAccounts.Command
                 .Should().BeTrue();
 
             _context.UserAccount
-                    .Where(u => u.Username == command.Username)
+                    .Where(u => u.Username == command.Username
+                             && u.Id != command.Id)
                     .Should().HaveCount(1);
         }
 

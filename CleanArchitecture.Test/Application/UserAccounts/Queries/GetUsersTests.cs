@@ -1,4 +1,5 @@
 ﻿using CleanArchitecture.Application.UserAccounts.Queries.GetUsers;
+using CleanArchitecture.Domain.Entities;
 using FluentAssertions;
 using System;
 using System.Collections.Generic;
@@ -24,6 +25,14 @@ namespace CleanArchitecture.Test.Application.UserAccounts.Queries
         {
             // Arrange
             var query = new GetUsersQuery();
+            var expected = new List<UserAccount>()
+            {
+                new UserAccount() { Id = 1, Username = "User1", Password = "Password1", CreatedBy = _jwtServices.GetLoggedUser().UserId, CreatedDate = _dateTimeService.Now },
+                new UserAccount() { Id = 2, Username = "User2", Password = "Password1", CreatedBy = _jwtServices.GetLoggedUser().UserId, CreatedDate = _dateTimeService.Now },
+                new UserAccount() { Id = 3, Username = "User3", Password = "Password1", CreatedBy = _jwtServices.GetLoggedUser().UserId, CreatedDate = _dateTimeService.Now },
+                new UserAccount() { Id = 4, Username = "User4", Password = "Password1", CreatedBy = _jwtServices.GetLoggedUser().UserId, CreatedDate = _dateTimeService.Now },
+                new UserAccount() { Id = 5, Username = "User5", Password = "Password1", CreatedBy = _jwtServices.GetLoggedUser().UserId, CreatedDate = _dateTimeService.Now },
+            };
 
             // Act
             var response = await _sutHandler.Handle(query, CancellationToken.None);
@@ -31,6 +40,9 @@ namespace CleanArchitecture.Test.Application.UserAccounts.Queries
             // Assert
             response.Data.Count()
                 .Should().Be(5);
+
+            response.Data
+                .Should().BeEquivalentTo(expected);
         }
     }
 }

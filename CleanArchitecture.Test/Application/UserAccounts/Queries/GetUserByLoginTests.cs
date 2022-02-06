@@ -33,9 +33,13 @@ namespace CleanArchitecture.Test.Application.UserAccounts.Queries
         {
             // Arrange
             var query = new GetUserByLoginQuery("User1", "Password1");
-            var user = _context.UserAccount
-                               .FirstOrDefault(u => u.Username == query.Username
-                                        && u.Password == query.Password); 
+            var expected = new GetUserByLoginDto
+            {
+                Id = 1,
+                Password = query.Password,
+                Username = query.Username,
+                Token = _jwtServices.CreateToken(new TokenData { UserId = 1 }),
+            }; 
 
             // Act
             var response = await _sut.Handle(query, CancellationToken.None);
@@ -44,14 +48,8 @@ namespace CleanArchitecture.Test.Application.UserAccounts.Queries
             response.Error
                     .Should().BeFalse();
 
-            response.Data.Id
-                    .Should().Be(user.Id);
-
-            response.Data.Username
-                    .Should().Be(user.Username);
-
-            response.Data.Password
-                    .Should().Be(user.Password);
+            response.Data
+                .Should().BeEquivalentTo(expected);
         }
 
         [Fact]
