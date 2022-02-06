@@ -11,7 +11,7 @@ namespace CleanArchitecture.Infrastructure.Helpers
     {
         public static SymmetricSecurityKey GetSecurityKey()
         {
-            var securityKey = "abcabc";
+            var securityKey = "abcabcdsakhakldm,asfkadasnjdkas";
 
             var symmetricSecurtyKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(securityKey));
 

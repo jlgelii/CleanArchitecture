@@ -40,7 +40,7 @@ namespace CleanArchitecture.Infrastructure.Services
             return result;
         }
 
-        public TokenData CheckUserByClaims()
+        public TokenData GetLoggedUser()
         {
             TokenData token = null;
 

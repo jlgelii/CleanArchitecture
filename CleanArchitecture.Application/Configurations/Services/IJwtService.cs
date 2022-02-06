@@ -10,6 +10,6 @@ namespace CleanArchitecture.Application.Configurations.Services
     public interface IJwtServices
     {
         string CreateToken(TokenData loginUser);
-        TokenData CheckUserByClaims();
+        TokenData GetLoggedUser();
     }
 }

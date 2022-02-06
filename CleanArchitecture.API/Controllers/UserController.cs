@@ -1,4 +1,5 @@
-﻿using CleanArchitecture.Application.UserAccounts.Queries.GetUserByLogin;
+﻿using CleanArchitecture.Application.UserAccounts.Command.CreateUser;
+using CleanArchitecture.Domain.Entities;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -10,29 +11,28 @@ namespace CleanArchitecture.API.Controllers
     [Authorize]
     [Route("api/[controller]")]
     [ApiController]
-    public class LoginController : ControllerBase
+    public class UserController : ControllerBase
     {
         private readonly IMediator _mediator;
 
-        public LoginController(IMediator mediator)
+        public UserController(IMediator mediator)
         {
             this._mediator = mediator;
         }
 
 
         /// <summary>
-        /// Get user by login
+        /// Create user
         /// </summary>
-        /// <param name="query"></param>
+        /// <param name="command"></param>
         /// <returns></returns>
-        [AllowAnonymous]
         [HttpPost]
         [Route("")]
-        public async Task<ActionResult<GetUserByLoginDto>> GetUserByLogin(GetUserByLoginQuery query)
+        public async Task<ActionResult<UserAccount>> CreateUserAccount(CreateUserCommand command)
         {
-            var response = await _mediator.Send(query);
+            var response = await _mediator.Send(command);
             if (response.Error)
-                return BadRequest(response.ModelStateError);
+                return BadRequest(response.Error);
 
             return Ok(response.Data);
         }

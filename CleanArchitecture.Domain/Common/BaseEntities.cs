@@ -14,6 +14,6 @@ namespace CleanArchitecture.Domain.Common
         public DateTime UpdatedDate { get; set; }
         public bool Deleted { get; set; }
         public int DeletedBy { get; set; }
-        public DateTime DeletedByDate { get; set; }
+        public DateTime DeletedDate { get; set; }
     }
 }

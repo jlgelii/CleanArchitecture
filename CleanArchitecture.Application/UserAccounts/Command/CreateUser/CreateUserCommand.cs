@@ -1,21 +1,17 @@
 ﻿using CleanArchitecture.Domain.Common;
+using CleanArchitecture.Domain.Entities;
+using MediatR;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CleanArchitecture.Domain.Entities
+namespace CleanArchitecture.Application.UserAccounts.Command.CreateUser
 {
-    public class UserAccount : BaseEntities
+    public class CreateUserCommand : IRequest<Response<UserAccount>>
     {
-        public int Id { get; set; }
-
-        [MaxLength(100)]
         public string Username { get; set; }
-
-        [MaxLength(250)]
         public string Password { get; set; }
     }
 }

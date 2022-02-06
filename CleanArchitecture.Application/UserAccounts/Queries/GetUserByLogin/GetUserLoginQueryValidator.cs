@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CleanArchitecture.Application.UserAccounts.Queries
+namespace CleanArchitecture.Application.UserAccounts.Queries.GetUserByLogin
 {
     public class GetUserLoginQueryValidator : IValidationHandler<GetUserByLoginQuery>
     {

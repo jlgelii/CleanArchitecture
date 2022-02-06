@@ -60,7 +60,7 @@ namespace CleanArchitecture.API
             }
 
             app.ConfigureSwaggerHandler();
-            app.ConfigureExceptionHandler();
+            //app.ConfigureExceptionHandler();
 
             app.UseHttpsRedirection();
             app.UseRouting();
