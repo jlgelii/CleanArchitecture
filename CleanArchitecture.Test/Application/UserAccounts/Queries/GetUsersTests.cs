@@ -25,6 +25,11 @@ namespace CleanArchitecture.Test.Application.UserAccounts.Queries
         {
             // Arrange
             var query = new GetUsersQuery();
+
+            // Act
+            var response = await _sutHandler.Handle(query, CancellationToken.None);
+
+            // Assert
             var expected = new List<UserAccount>()
             {
                 new UserAccount() { Id = 1, Username = "User1", Password = "Password1", CreatedBy = _jwtServices.GetLoggedUser().UserId, CreatedDate = _dateTimeService.Now },
@@ -34,10 +39,6 @@ namespace CleanArchitecture.Test.Application.UserAccounts.Queries
                 new UserAccount() { Id = 5, Username = "User5", Password = "Password1", CreatedBy = _jwtServices.GetLoggedUser().UserId, CreatedDate = _dateTimeService.Now },
             };
 
-            // Act
-            var response = await _sutHandler.Handle(query, CancellationToken.None);
-
-            // Assert
             response.Data.Count()
                 .Should().Be(5);
 

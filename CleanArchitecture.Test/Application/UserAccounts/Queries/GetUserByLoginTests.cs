@@ -33,18 +33,19 @@ namespace CleanArchitecture.Test.Application.UserAccounts.Queries
         {
             // Arrange
             var query = new GetUserByLoginQuery("User1", "Password1");
+
+            // Act
+            var response = await _sut.Handle(query, CancellationToken.None);
+
+            // Assert
             var expected = new GetUserByLoginDto
             {
                 Id = 1,
                 Password = query.Password,
                 Username = query.Username,
                 Token = _jwtServices.CreateToken(new TokenData { UserId = 1 }),
-            }; 
+            };
 
-            // Act
-            var response = await _sut.Handle(query, CancellationToken.None);
-
-            // Assert
             response.Error
                     .Should().BeFalse();
 

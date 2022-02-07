@@ -32,6 +32,11 @@ namespace CleanArchitecture.Test.Application.UserAccounts.Command
         {
             // Arrange
             var command = new CreateUserCommand("user6", "password");
+
+            // Act
+            var response = await _sut.Handle(command, CancellationToken.None);
+
+            // Assert
             var expected = new UserAccount()
             {
                 CreatedBy = _jwtServices.GetLoggedUser().UserId,
@@ -41,10 +46,6 @@ namespace CleanArchitecture.Test.Application.UserAccounts.Command
                 Username = command.Username,
             };
 
-            // Act
-            var response = await _sut.Handle(command, CancellationToken.None);
-
-            // Assert
             response.Data
                 .Should().BeEquivalentTo(expected);
         }
