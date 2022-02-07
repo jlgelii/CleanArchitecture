@@ -28,6 +28,11 @@ namespace CleanArchitecture.Test.Application.UserAccounts.Command
         {
             // Arrange
             var command = new UpdateUserCommand(1, "User1000", "Password123");
+
+            // Act
+            var response = await _sutHandler.Handle(command, CancellationToken.None);
+
+            // Assert
             var expected = new UserAccount()
             {
                 Username = command.Username,
@@ -39,18 +44,11 @@ namespace CleanArchitecture.Test.Application.UserAccounts.Command
                 CreatedDate = _dateTimeService.Now,
             };
 
-            // Act
-            var response = await _sutHandler.Handle(command, CancellationToken.None);
-
-            // Assert
-            var user = _context.UserAccount
-                               .FirstOrDefault(u => u.Username == command.Username
-                                                 && u.Password == command.Password);
-
             response.Error
                 .Should().BeFalse();
 
-            user.Should().BeEquivalentTo(expected);
+            response.Data
+                .Should().BeEquivalentTo(expected);
         }
 
         [Fact]

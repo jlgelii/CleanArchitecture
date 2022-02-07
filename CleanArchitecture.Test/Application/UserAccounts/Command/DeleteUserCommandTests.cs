@@ -28,6 +28,11 @@ namespace CleanArchitecture.Test.Application.UserAccounts.Command
         {
             // Arrange
             var command = new DeleteUserCommand(1);
+
+            // Act
+            var response = await _sutHandler.Handle(command, CancellationToken.None);
+
+            // Assert
             var expected = new UserAccount()
             {
                 CreatedBy = _jwtServices.GetLoggedUser().UserId,
@@ -42,10 +47,6 @@ namespace CleanArchitecture.Test.Application.UserAccounts.Command
                 UpdatedDate = _dateTimeService.Now,
             };
 
-            // Act
-            var response = await _sutHandler.Handle(command, CancellationToken.None);
-
-            // Assert
             response.Error
                 .Should().BeFalse();
 
