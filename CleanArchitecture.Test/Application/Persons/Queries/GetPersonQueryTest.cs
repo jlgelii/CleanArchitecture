@@ -11,7 +11,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Xunit;
 
-namespace CleanArchitecture.Test.Application.Persons.Queries.GetPerson
+namespace CleanArchitecture.Test.Application.Persons.Queries
 {
     public class GetPersonQueryTest : BaseTest
     {
