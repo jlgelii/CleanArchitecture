@@ -43,6 +43,7 @@ namespace CleanArchitecture.Infrastructure.Database
 
 
         public DbSet<UserAccount> UserAccount { get; set; }
+        public DbSet<Person> Person { get; set; }
 
 
         void ISampleDbContext.SaveChanges()
