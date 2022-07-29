@@ -81,11 +81,22 @@ namespace CleanArchitecture.Test.Application.Persons.Command
                                                 BirthDate: _dateTimeService.Now,
                                                 Gender: "Male");
 
+            var param2 = new UpdatePersonCommand(Id: 1,
+                                                Firstname: "Rey",
+                                                Lastname: "",
+                                                BirthDate: _dateTimeService.Now,
+                                                Gender: "Male");
+
             // Act
             var response = await validator.Validate(param);
+            var response2 = await validator.Validate(param2);
 
             // Assert
             response.IsSuccessful
+                    .Should().BeFalse();
+
+
+            response2.IsSuccessful
                     .Should().BeFalse();
         }
     }
