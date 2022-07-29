@@ -15,6 +15,9 @@ namespace CleanArchitecture.Application.Persons.Command.UpdatePerson
             if (string.IsNullOrEmpty(request.Firstname))
                 return ValidationResults.Fail("Firstname does not exist.");
 
+            if (string.IsNullOrEmpty(request.Lastname))
+                return ValidationResults.Fail("Lastname does not exist.");
+
             return ValidationResults.Success;
         }
     }
