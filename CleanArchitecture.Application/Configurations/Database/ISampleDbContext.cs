@@ -15,5 +15,6 @@ namespace CleanArchitecture.Application.Configurations.Database
 
 
         void SaveChanges();
+        Task<int> SaveChangesAsync();
     }
 }
