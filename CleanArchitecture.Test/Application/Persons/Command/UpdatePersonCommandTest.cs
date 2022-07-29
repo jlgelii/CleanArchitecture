@@ -68,5 +68,25 @@ namespace CleanArchitecture.Test.Application.Persons.Command
             response.Error
                     .Should().BeTrue();
         }
+
+
+        [Fact]
+        public async void UpdatePerson_ShouldReturnError_WhenParametersAreNotValid()
+        {
+            // Arrange
+            var validator = new UpdatePersonCommandValidator();
+            var param = new UpdatePersonCommand(Id: 1,
+                                                Firstname: "",
+                                                Lastname: "Rey",
+                                                BirthDate: _dateTimeService.Now,
+                                                Gender: "Male");
+
+            // Act
+            var response = await validator.Validate(param);
+
+            // Assert
+            response.IsSuccessful
+                    .Should().BeFalse();
+        }
     }
 }
