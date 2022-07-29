@@ -25,8 +25,8 @@ namespace CleanArchitecture.Application.Persons.Command.UpdatePerson
             var person = _context.Person
                                 .FirstOrDefault(x => x.Id == request.Id);
 
-            if (person == null)
-                return await Task.FromResult(Response.Fail(person, "Person does not exist."));
+            //if (person == null)
+            //    return await Task.FromResult(Response.Fail(person, "Person does not exist."));
 
             person.Firstname = request.Firstname;
             person.Lastname = request.Lastname;
