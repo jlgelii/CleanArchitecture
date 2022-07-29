@@ -21,9 +21,9 @@ jobs:
       run: dotnet restore
     - name: Build
       run: dotnet build --no-restore
-    
+
     - name: redirect
-      run: cd src/CleanArchitecture.Test
+      run: cd CleanArchitecture.Test
       
     - name: Test
-      run: dotnet test --restore
+      run: dotnet test 
