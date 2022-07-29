@@ -21,5 +21,9 @@ jobs:
       run: dotnet restore
     - name: Build
       run: dotnet build --no-restore
+
+    - name: redirect
+      run: cd CleanArchitecture.Test
+      
     - name: Test
-      run: dotnet test --no-build --verbosity normal
+      run: dotnet test 
