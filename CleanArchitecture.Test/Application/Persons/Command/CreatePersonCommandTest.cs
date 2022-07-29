@@ -1,6 +1,8 @@
 ﻿using CleanArchitecture.Application.Persons.Command.CreatePerson;
 using CleanArchitecture.Domain.Entities;
 using FluentAssertions;
+using MediatR;
+using Moq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -25,13 +27,10 @@ namespace CleanArchitecture.Test.Application.Persons.Command
         public async void CreatePerson_ShouldAddPerson_WhenParametersAreValid()
         {
             // Arrange
-            var param = new CreatePersonCommand()
-            {
-                Firstname = "Jepoy",
-                Lastname = "Leroy",
-                Gender = "Male",
-                BirthDate = _dateTimeService.Now,
-            };
+            var param = new CreatePersonCommand(Firstname: "Jepoy",
+                                                Lastname: "Leroy",
+                                                Gender: "Male",
+                                                BirthDate: _dateTimeService.Now);
 
             // Act
             var response = await _sut.Handle(param, CancellationToken.None);
@@ -71,5 +70,33 @@ namespace CleanArchitecture.Test.Application.Persons.Command
                          .Should().Be(_dateTimeService.Now);
         }
 
+
+        [Fact]
+        public async void CreatePerson_ShouldReturnError_WhenRequiredFieldsDoesNotExist()
+        {
+            // Arrange
+            var validator = new CreatePersonCommandValidator();
+            var param = new CreatePersonCommand(Firstname: "",
+                                                Lastname: "Leroy",
+                                                Gender: "Male",
+                                                BirthDate: _dateTimeService.Now);
+
+            var param2 = new CreatePersonCommand(Firstname: "Eloy",
+                                                Lastname: "",
+                                                Gender: "Male",
+                                                BirthDate: _dateTimeService.Now);
+
+            // Act
+            var response = await validator.Validate(param);
+            var response2 = await validator.Validate(param2);
+
+            // Assert
+            response.IsSuccessful
+                    .Should().BeFalse();
+
+            response2.IsSuccessful
+                    .Should().BeFalse();
+
+        }
     }
 }
