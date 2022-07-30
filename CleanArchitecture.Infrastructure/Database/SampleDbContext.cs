@@ -43,6 +43,7 @@ namespace CleanArchitecture.Infrastructure.Database
 
 
         public DbSet<UserAccount> UserAccount { get; set; }
+        public DbSet<Person> Person { get; set; }
 
 
         void ISampleDbContext.SaveChanges()
@@ -69,6 +70,27 @@ namespace CleanArchitecture.Infrastructure.Database
             }
 
             return base.SaveChanges();
+        }
+
+        public async Task<int> SaveChangesAsync()
+        {
+            foreach (var entry in ChangeTracker.Entries<BaseEntities>())
+            {
+                switch (entry.State)
+                {
+                    case EntityState.Added:
+                        entry.Entity.CreatedBy = _jwtServices.GetLoggedUser().UserId;
+                        entry.Entity.CreatedDate = _dateTimeService.Now;
+                        break;
+
+                    case EntityState.Modified:
+                        entry.Entity.UpdatedBy = _jwtServices.GetLoggedUser().UserId;
+                        entry.Entity.UpdatedDate = _dateTimeService.Now;
+                        break;
+                }
+            }
+
+            return await base.SaveChangesAsync();
         }
     }
 }

@@ -11,8 +11,10 @@ namespace CleanArchitecture.Application.Configurations.Database
     public interface ISampleDbContext
     {
         DbSet<UserAccount> UserAccount { get; set; }
+        DbSet<Person> Person { get; set; }
 
 
         void SaveChanges();
+        Task<int> SaveChangesAsync();
     }
 }
