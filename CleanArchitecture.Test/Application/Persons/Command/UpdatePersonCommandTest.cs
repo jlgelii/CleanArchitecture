@@ -19,16 +19,21 @@ namespace CleanArchitecture.Test.Application.Persons.Command
             _sut = new UpdatePersonCommandHandler(_context);
         }
 
-
-        [Fact]
-        public async void UpdatePerson_ShouldUpdatePerson_WhenParametersAreValid()
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="firstname"></param>
+        /// <param name="lastname"></param>
+        /// <param name="gender"></param>
+        /// <param name="birthdate"></param>
+        [Theory]
+        [InlineData(1, "Jepoy", "Leroy", "Male", "1-1-2022")]
+        public async void UpdatePerson_ShouldUpdatePerson_WhenParametersAreValid(int id, string firstname, string lastname, string gender, DateTime birthdate)
         {
             // Arrange
-            var param = new UpdatePersonCommand(Id: 1,
-                                                Firstname: "Vhon",
-                                                Lastname: "Rey",
-                                                BirthDate: _dateTimeService.Now,
-                                                Gender: "Male");
+            var param = new UpdatePersonCommand(id, firstname, lastname, birthdate, gender);
 
             // Act
             var response = await _sut.Handle(param, CancellationToken.None);
@@ -51,15 +56,20 @@ namespace CleanArchitecture.Test.Application.Persons.Command
         }
 
 
-        [Fact]
-        public async void UpdatePerson_ShouldReturnError_WhenIdNotExist()
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="firstname"></param>
+        /// <param name="lastname"></param>
+        /// <param name="gender"></param>
+        /// <param name="birthdate"></param>
+        [Theory]
+        [InlineData(17, "Jepoy", "Leroy", "Male", "1-1-2022")]
+        public async void UpdatePerson_ShouldReturnError_WhenIdNotExist(int id, string firstname, string lastname, string gender, DateTime birthdate)
         {
             // Arrange
-            var param = new UpdatePersonCommand(Id: 7,
-                                                Firstname: "Vhon",
-                                                Lastname: "Rey",
-                                                BirthDate: _dateTimeService.Now,
-                                                Gender: "Male");
+            var param = new UpdatePersonCommand(id, firstname, lastname, birthdate, gender);
 
             // Act
             var response = await _sut.Handle(param, CancellationToken.None);
@@ -70,33 +80,28 @@ namespace CleanArchitecture.Test.Application.Persons.Command
         }
 
 
-        [Fact]
-        public async void UpdatePerson_ShouldReturnError_WhenParametersAreNotValid()
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="firstname"></param>
+        /// <param name="lastname"></param>
+        /// <param name="gender"></param>
+        /// <param name="birthdate"></param>
+        [Theory]
+        [InlineData(1, "", "Leroy", "Male", "1-1-2022")]
+        [InlineData(1, "Jepoy", "", "Male", "1-1-2022")]
+        public async void UpdatePerson_ShouldReturnError_WhenParametersAreNotValid(int id, string firstname, string lastname, string gender, DateTime birthdate)
         {
             // Arrange
             var validator = new UpdatePersonCommandValidator();
-            var param = new UpdatePersonCommand(Id: 1,
-                                                Firstname: "",
-                                                Lastname: "Rey",
-                                                BirthDate: _dateTimeService.Now,
-                                                Gender: "Male");
-
-            var param2 = new UpdatePersonCommand(Id: 1,
-                                                Firstname: "Rey",
-                                                Lastname: "",
-                                                BirthDate: _dateTimeService.Now,
-                                                Gender: "Male");
+            var param = new UpdatePersonCommand(id, firstname, lastname, birthdate, gender);
 
             // Act
             var response = await validator.Validate(param);
-            var response2 = await validator.Validate(param2);
 
             // Assert
             response.IsSuccessful
-                    .Should().BeFalse();
-
-
-            response2.IsSuccessful
                     .Should().BeFalse();
         }
     }

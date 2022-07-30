@@ -23,14 +23,20 @@ namespace CleanArchitecture.Test.Application.Persons.Command
         }
 
 
-        [Fact]
-        public async void CreatePerson_ShouldAddPerson_WhenParametersAreValid()
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="firstname"></param>
+        /// <param name="lastname"></param>
+        /// <param name="gender"></param>
+        /// <param name="birthdate"></param>
+        /// <param name="useraccountid"></param>
+        [Theory]
+        [InlineData("Jepoy", "Leroy", "Male", "1-1-2022", 1)]
+        public async void CreatePerson_ShouldAddPerson_WhenParametersAreValid(string firstname, string lastname, string gender, DateTime birthdate, int useraccountid)
         {
             // Arrange
-            var param = new CreatePersonCommand(Firstname: "Jepoy",
-                                                Lastname: "Leroy",
-                                                Gender: "Male",
-                                                BirthDate: _dateTimeService.Now);
+            var param = new CreatePersonCommand(firstname, lastname, birthdate, gender, useraccountid);
 
             // Act
             var response = await _sut.Handle(param, CancellationToken.None);
@@ -52,16 +58,16 @@ namespace CleanArchitecture.Test.Application.Persons.Command
                          .Should().Be(6);
 
             response.Data.Firstname
-                         .Should().Be("Jepoy");
+                         .Should().Be(firstname);
 
             response.Data.Lastname
-                         .Should().Be("Leroy");
+                         .Should().Be(lastname);
 
             response.Data.Gender
                          .Should().Be("Male");
 
             response.Data.BirthDate
-                         .Should().Be(_dateTimeService.Now);
+                         .Should().Be(birthdate);
 
             response.Data.CreatedBy
                          .Should().Be(_jwtServices.GetLoggedUser().UserId);
@@ -71,32 +77,53 @@ namespace CleanArchitecture.Test.Application.Persons.Command
         }
 
 
-        [Fact]
-        public async void CreatePerson_ShouldReturnError_WhenRequiredFieldsDoesNotExist()
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="firstname"></param>
+        /// <param name="lastname"></param>
+        /// <param name="gender"></param>
+        /// <param name="birthdate"></param>
+        /// <param name="useraccountid"></param>
+        [Theory]
+        [InlineData("", "Leroy", "Male", "1-1-2022", 1)]
+        [InlineData("Jepoy", "", "Male", "1-1-2022", 1)]
+        public async void CreatePerson_ShouldReturnError_WhenRequiredFieldsDoesNotExist(string firstname, string lastname, string gender, DateTime birthdate, int useraccountid)
         {
             // Arrange
             var validator = new CreatePersonCommandValidator();
-            var param = new CreatePersonCommand(Firstname: "",
-                                                Lastname: "Leroy",
-                                                Gender: "Male",
-                                                BirthDate: _dateTimeService.Now);
-
-            var param2 = new CreatePersonCommand(Firstname: "Eloy",
-                                                Lastname: "",
-                                                Gender: "Male",
-                                                BirthDate: _dateTimeService.Now);
+            var param = new CreatePersonCommand(firstname, lastname, birthdate, gender, useraccountid);
 
             // Act
             var response = await validator.Validate(param);
-            var response2 = await validator.Validate(param2);
 
             // Assert
             response.IsSuccessful
                     .Should().BeFalse();
+        }
 
-            response2.IsSuccessful
-                    .Should().BeFalse();
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="firstname"></param>
+        /// <param name="lastname"></param>
+        /// <param name="gender"></param>
+        /// <param name="birthdate"></param>
+        /// <param name="useraccountid"></param>
+        [Theory]
+        [InlineData("Jepoy", "Leroy", "Male", "1-1-2022", 15)]
+        public async void CreatePerson_ShouldReturnError_WhenUserAccountDoesNotExist(string firstname, string lastname, string gender, DateTime birthdate, int useraccountid)
+        {
+            // Arrange
+            var param = new CreatePersonCommand(firstname, lastname, birthdate, gender, useraccountid);
+
+            // Act
+            var response = await _sut.Handle(param, CancellationToken.None);
+
+            // Assert
+            response.Error
+                    .Should().BeTrue();
         }
     }
 }

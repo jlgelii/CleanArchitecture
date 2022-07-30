@@ -2,6 +2,7 @@
 using CleanArchitecture.Domain.Common;
 using CleanArchitecture.Domain.Entities;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -22,12 +23,20 @@ namespace CleanArchitecture.Application.Persons.Command.CreatePerson
 
         public async Task<Response<Person>> Handle(CreatePersonCommand request, CancellationToken cancellationToken)
         {
-            var person = new Person
+            Person person = null; 
+            var useraccount = await _context.UserAccount
+                                            .FirstOrDefaultAsync(u => u.Id == request.UserAccountId);
+
+            if (useraccount == null)
+                return await Task.FromResult(Response.Fail(person, "Useraccount does not exist."));
+
+            person = new Person
             {
                 BirthDate = request.BirthDate,
                 Firstname = request.Firstname,
                 Lastname = request.Lastname,
                 Gender = request.Gender,
+                UserAccountId = request.UserAccountId
             };
 
             await _context.Person.AddAsync(person);

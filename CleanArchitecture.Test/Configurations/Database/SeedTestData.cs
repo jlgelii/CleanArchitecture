@@ -49,15 +49,16 @@ namespace CleanArchitecture.Test.Configurations.Database
             context.SaveChanges();
         }
 
+
         public static async void SeedPerson(SampleDbContext context)
         {
             var person = new List<Person>()
             {
-                new Person() { Id = 1, Firstname = "Firstname 1", Lastname = "Lastname 1", Gender = "Male", BirthDate = Convert.ToDateTime("2010-1-1") },
-                new Person() { Id = 2, Firstname = "Firstname 2", Lastname = "Lastname 2", Gender = "Female", BirthDate = Convert.ToDateTime("2010-1-1") },
-                new Person() { Id = 3, Firstname = "Firstname 3", Lastname = "Lastname 3", Gender = "Male", BirthDate = Convert.ToDateTime("2010-1-1") },
-                new Person() { Id = 4, Firstname = "Firstname 4", Lastname = "Lastname 4", Gender = "Male", BirthDate = Convert.ToDateTime("2010-1-1") },
-                new Person() { Id = 5, Firstname = "Firstname 5", Lastname = "Lastname 5", Gender = "Female", BirthDate = Convert.ToDateTime("2010-1-1") },
+                new Person() { Id = 1, Firstname = "Firstname 1", Lastname = "Lastname 1", Gender = "Male", BirthDate = Convert.ToDateTime("2010-1-1"), UserAccountId = 1 },
+                new Person() { Id = 2, Firstname = "Firstname 2", Lastname = "Lastname 2", Gender = "Female", BirthDate = Convert.ToDateTime("2010-1-1"), UserAccountId = 2 },
+                new Person() { Id = 3, Firstname = "Firstname 3", Lastname = "Lastname 3", Gender = "Male", BirthDate = Convert.ToDateTime("2010-1-1"), UserAccountId = 3 },
+                new Person() { Id = 4, Firstname = "Firstname 4", Lastname = "Lastname 4", Gender = "Male", BirthDate = Convert.ToDateTime("2010-1-1"), UserAccountId = 4 },
+                new Person() { Id = 5, Firstname = "Firstname 5", Lastname = "Lastname 5", Gender = "Female", BirthDate = Convert.ToDateTime("2010-1-1"), UserAccountId = 5 },
             };
 
             if (context.Person.Count() == 0)
