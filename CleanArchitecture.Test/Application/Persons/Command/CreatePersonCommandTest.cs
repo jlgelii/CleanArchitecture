@@ -48,32 +48,29 @@ namespace CleanArchitecture.Test.Application.Persons.Command
             var expectedCount = _context.Person
                                         .Count();
 
+            var expected = new Person()
+            {
+                Id = 6,
+                Firstname = firstname,
+                Lastname = lastname,
+                Gender = gender,
+                BirthDate = birthdate,
+                CreatedDate = _dateTimeService.Now,
+                CreatedBy = _jwtServices.GetLoggedUser().UserId,
+                UserAccountId = useraccountid
+            };
+
             response.Error
                     .Should().BeFalse();
+
+            response.Data
+                    .Should().BeEquivalentTo(expected);
 
             expectedCount.Should().Be(6);
             expectedExist.Should().NotBeNull();
 
-            response.Data.Id
-                         .Should().Be(6);
-
-            response.Data.Firstname
-                         .Should().Be(firstname);
-
-            response.Data.Lastname
-                         .Should().Be(lastname);
-
-            response.Data.Gender
-                         .Should().Be("Male");
-
-            response.Data.BirthDate
-                         .Should().Be(birthdate);
-
-            response.Data.CreatedBy
-                         .Should().Be(_jwtServices.GetLoggedUser().UserId);
-
-            response.Data.CreatedDate
-                         .Should().Be(_dateTimeService.Now);
+            response.Data
+                    .Should().BeEquivalentTo(expected);
         }
 
 

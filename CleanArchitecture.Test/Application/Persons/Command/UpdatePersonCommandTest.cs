@@ -46,13 +46,7 @@ namespace CleanArchitecture.Test.Application.Persons.Command
                     .Should().BeFalse();
 
             response.Data
-                    .Firstname.Should().Be(expected.Firstname);
-            response.Data
-                    .Lastname.Should().Be(expected.Lastname);
-            response.Data
-                    .BirthDate.Should().Be(expected.BirthDate);
-            response.Data
-                    .Gender.Should().Be(expected.Gender);
+                    .Should().BeEquivalentTo(expected);
         }
 
 

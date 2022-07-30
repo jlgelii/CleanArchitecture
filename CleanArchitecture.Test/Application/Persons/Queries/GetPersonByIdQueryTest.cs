@@ -22,11 +22,12 @@ namespace CleanArchitecture.Test.Application.Persons.Queries
         }
 
 
-        [Fact]
-        public async void GetPersonById_ShouldGetPerson_WhenParameterIsValid()
+        [Theory]
+        [InlineData(2, 2)]
+        public async void GetPersonById_ShouldGetPerson_WhenParameterIsValid(int personId, int useraccountId)
         {
             // Arrange
-            var param = new GetPersonByIdQuery(2);
+            var param = new GetPersonByIdQuery(personId);
 
             // Act
             var result = await _sut.Handle(param, CancellationToken.None);
@@ -37,12 +38,13 @@ namespace CleanArchitecture.Test.Application.Persons.Queries
 
             var expected = new Person() 
             { 
-                Id = 2, Firstname = "Firstname 2", 
-                Lastname = "Lastname 2", 
+                Id = 2, Firstname = $"Firstname {personId}", 
+                Lastname = $"Lastname {personId}", 
                 Gender = "Female", 
                 BirthDate = Convert.ToDateTime("2010-1-1"),
                 CreatedDate = date.Now,
-                CreatedBy = user.GetLoggedUser().UserId
+                CreatedBy = user.GetLoggedUser().UserId,
+                UserAccountId = useraccountId
             };
 
             result.Error
