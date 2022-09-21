@@ -61,7 +61,7 @@ namespace CleanArchitecture.API
             }
 
             app.ConfigureSwaggerHandler();
-            //app.ConfigureExceptionHandler();
+            app.ConfigureExceptionHandler(Convert.ToBoolean(Configuration["Logging:IsShowException"]));
 
             app.UseHttpsRedirection();
             app.UseRouting();
