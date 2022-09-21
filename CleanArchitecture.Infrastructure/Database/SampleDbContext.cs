@@ -13,10 +13,14 @@ namespace CleanArchitecture.Infrastructure.Database
 {
     public class SampleDbContext : DbContext, ISampleDbContext
     {
+        #region private fields
         private readonly string _databaseName;
         private readonly IJwtServices _jwtServices;
         private readonly IDateTimeService _dateTimeService;
 
+        #endregion
+
+        #region Constructors
         public SampleDbContext(IConnectionsConfigurations connections,
             IDateTimeService dateTimeService,
             IJwtServices jwtServices)
@@ -34,12 +38,7 @@ namespace CleanArchitecture.Infrastructure.Database
             _jwtServices = jwtServices;
         }
 
-
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        {
-            if (!string.IsNullOrEmpty(_databaseName))
-                optionsBuilder.UseSqlServer(_databaseName);
-        }
+        #endregion
 
 
         public DbSet<UserAccount> UserAccount { get; set; }
@@ -48,6 +47,14 @@ namespace CleanArchitecture.Infrastructure.Database
         void ISampleDbContext.SaveChanges()
         {
             SaveChanges();
+        }
+
+
+        #region Overrides
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            if (!string.IsNullOrEmpty(_databaseName))
+                optionsBuilder.UseSqlServer(_databaseName);
         }
 
         public override int SaveChanges()
@@ -70,5 +77,6 @@ namespace CleanArchitecture.Infrastructure.Database
 
             return base.SaveChanges();
         }
+        #endregion
     }
 }

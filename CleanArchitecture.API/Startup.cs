@@ -38,6 +38,7 @@ namespace CleanArchitecture.API
         {
             services.AddControllers();
 
+            services.AddCorsAll();
             services.AddJwt();
             services.AddSwagger();
             services.AddValidators();
@@ -63,6 +64,7 @@ namespace CleanArchitecture.API
             app.ConfigureSwaggerHandler();
             app.ConfigureExceptionHandler(Convert.ToBoolean(Configuration["Logging:IsShowException"]));
 
+            app.UseCors("CorsPolicy");
             app.UseHttpsRedirection();
             app.UseRouting();
             app.UseAuthentication();
