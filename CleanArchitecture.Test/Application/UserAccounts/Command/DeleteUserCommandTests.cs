@@ -33,26 +33,12 @@ namespace CleanArchitecture.Test.Application.UserAccounts.Command
             var response = await _sutHandler.Handle(command, CancellationToken.None);
 
             // Assert
-            var expected = new UserAccount()
-            {
-                CreatedBy = _jwtServices.GetLoggedUser().UserId,
-                CreatedDate = _dateTimeService.Now,
-                Id = command.Id,
-                Deleted = true,
-                DeletedBy = _jwtServices.GetLoggedUser().UserId,
-                DeletedDate = _dateTimeService.Now,
-                Password = "Password1",
-                Username = "User1",
-                UpdatedBy = _jwtServices.GetLoggedUser().UserId,
-                UpdatedDate = _dateTimeService.Now,
-            };
-
             response.Error
                 .Should().BeFalse();
 
             _context.UserAccount
                 .FirstOrDefault(u => u.Id == command.Id)
-                .Should().BeEquivalentTo(expected);
+                .Should().BeNull();
         }
 
         [Fact]

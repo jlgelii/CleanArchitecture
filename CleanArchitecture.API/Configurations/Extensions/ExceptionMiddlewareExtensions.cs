@@ -10,7 +10,7 @@ namespace CleanArchitecture.API.Configurations.Extensions
 {
     public static class ExceptionMiddlewareExtensions
     {
-        public static void ConfigureExceptionHandler(this IApplicationBuilder app)
+        public static void ConfigureExceptionHandler(this IApplicationBuilder app, bool isShowError)
         {
             app = MaintainCorsHeadersOnError(app);
 
@@ -29,12 +29,24 @@ namespace CleanArchitecture.API.Configurations.Extensions
                         /// ex: Add Error logging
                         //ErrorHelpers.CreateErrorLogs(contextFeature.Error.ToString(), contextFeature.Error.Message);
 
-                        await context.Response.WriteAsync(new ModelStateError
+                        if (isShowError)
                         {
-                            Title = "Error",
-                            ErrorMessage = "We've encountered some problems please contact the administrator."
+                            await context.Response.WriteAsync(new ModelStateError
+                            {
+                                Title = "Error",
+                                ErrorMessage = contextFeature.Error.ToString()
+                            }
+                            .ToString());
                         }
-                        .ToString());
+                        else
+                        {
+                            await context.Response.WriteAsync(new ModelStateError
+                            {
+                                Title = "Error",
+                                ErrorMessage = "We've encountered some problems please contact the administrator."
+                            }
+                            .ToString());
+                        }
                     }
                 });
             });

@@ -41,6 +41,7 @@ namespace CleanArchitecture.API
             services.AddJwt();
             services.AddSwagger();
             services.AddValidators();
+            services.AddCorsAll();
 
             services.AddHttpContextAccessor();
             services.AddMediatR(typeof(EntryPoint).Assembly);
@@ -60,8 +61,9 @@ namespace CleanArchitecture.API
                 app.UseDeveloperExceptionPage();
             }
 
+            app.UseCors("CorsPolicy");
             app.ConfigureSwaggerHandler();
-            //app.ConfigureExceptionHandler();
+            app.ConfigureExceptionHandler(Convert.ToBoolean(Configuration["Logging:IsShowException"]));
 
             app.UseHttpsRedirection();
             app.UseRouting();
